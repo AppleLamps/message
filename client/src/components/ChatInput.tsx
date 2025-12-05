@@ -1,6 +1,5 @@
 import { useState, useRef, useEffect } from "react";
 import { Plus, Mic } from "lucide-react";
-import { cn } from "@/lib/utils";
 
 interface ChatInputProps {
   onSend: (message: string) => void;
@@ -45,24 +44,16 @@ export function ChatInput({ onSend, disabled }: ChatInputProps) {
         </button>
 
         <div className="flex-1 border border-gray-300 rounded-[20px] bg-white overflow-hidden">
-          <input
-            type="text"
-            placeholder="Subject"
-            className="w-full px-3 py-1.5 text-[17px] text-gray-400 placeholder:text-gray-400 border-b border-gray-200 focus:outline-none bg-transparent"
-            disabled
+          <textarea
+            ref={textareaRef}
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            onKeyDown={handleKeyDown}
+            placeholder="iMessage"
+            rows={1}
+            disabled={disabled}
+            className="w-full px-3 py-1.5 text-[17px] leading-[22px] resize-none focus:outline-none bg-transparent min-h-[22px] max-h-[100px]"
           />
-          <div className="relative">
-            <textarea
-              ref={textareaRef}
-              value={message}
-              onChange={(e) => setMessage(e.target.value)}
-              onKeyDown={handleKeyDown}
-              placeholder="iMessage"
-              rows={1}
-              disabled={disabled}
-              className="w-full px-3 py-1.5 text-[17px] leading-[22px] resize-none focus:outline-none bg-transparent min-h-[22px] max-h-[100px]"
-            />
-          </div>
         </div>
 
         <button 
