@@ -15,13 +15,13 @@ export function MessageBubble({ content, isUser, timestamp, showTail = true }: M
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.15, ease: "easeOut" }}
       className={cn(
-        "w-full flex",
+        "flex",
         isUser ? "justify-end" : "justify-start"
       )}
     >
       <div
         className={cn(
-          "relative px-3 py-[6px] max-w-[75%] text-[17px] leading-[22px] break-words",
+          "relative px-3 py-[6px] max-w-[75%] text-[17px] leading-[22px] whitespace-pre-wrap",
           "rounded-[18px]",
           isUser 
             ? "bg-ios-blue text-white" 
