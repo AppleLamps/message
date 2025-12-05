@@ -5,20 +5,30 @@ import { ChatInput } from "@/components/ChatInput";
 import { MessageBubble } from "@/components/MessageBubble";
 import { TypingIndicator } from "@/components/TypingIndicator";
 import avatarImage from "@assets/generated_images/a_professional_yet_friendly_ai_assistant_avatar.png";
+import { format, isSameDay, isYesterday } from "date-fns";
 
 interface Message {
   id: string;
   content: string;
   isUser: boolean;
   timestamp: Date;
+  status?: 'sent' | 'delivered' | 'read';
 }
 
 const INITIAL_MESSAGES: Message[] = [
+  {
+    id: "0",
+    content: "Hey there! 👋",
+    isUser: true,
+    timestamp: new Date(Date.now() - 86400000 * 2), // 2 days ago
+    status: 'read'
+  },
   {
     id: "1",
     content: "Hello! I'm your AI assistant. How can I help you today?",
     isUser: false,
     timestamp: new Date(Date.now() - 60000),
+    status: 'read'
   }
 ];
 
@@ -35,6 +45,18 @@ export default function Home() {
     scrollToBottom();
   }, [messages, isTyping]);
 
+  // Handle read receipts
+  useEffect(() => {
+    if (messages.length > 0) {
+      const timer = setTimeout(() => {
+        setMessages(prev => prev.map(m => 
+          (m.isUser && m.status === 'delivered') ? { ...m, status: 'read' } : m
+        ));
+      }, 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [messages]);
+
   const handleSend = async (content: string) => {
     // Add user message
     const userMessage: Message = {
@@ -42,6 +64,7 @@ export default function Home() {
       content,
       isUser: true,
       timestamp: new Date(),
+      status: 'delivered'
     };
     setMessages((prev) => [...prev, userMessage]);
     
@@ -59,7 +82,10 @@ export default function Home() {
         "Could you clarify what you mean?",
         "I'm designed to assist with tasks like this.",
         "Let me think about that for a second.",
-        `I understand you said: "${content}"`
+        `I understand you said: "${content}"`,
+        "👍",
+        "Haha that's funny!",
+        "Absolutely."
       ];
       
       const randomResponse = aiResponses[Math.floor(Math.random() * aiResponses.length)];
@@ -69,6 +95,7 @@ export default function Home() {
         content: randomResponse,
         isUser: false,
         timestamp: new Date(),
+        status: 'sent'
       };
       
       setIsTyping(false);
@@ -76,46 +103,59 @@ export default function Home() {
     }, delay);
   };
 
+  // Group messages by date
+  const getMessageDateGroup = (date: Date) => {
+    if (isSameDay(date, new Date())) return "Today";
+    if (isYesterday(date)) return "Yesterday";
+    return format(date, "EEEE, MMM d");
+  };
+
   return (
     <ChatLayout>
       <Header />
       
-      <div className="flex-1 overflow-y-auto px-3 py-4 space-y-1">
-        {/* Time stamp at top */}
-        <div className="text-center py-4">
-          <span className="text-[11px] font-medium text-gray-400">
-            iMessage
-            <br/>
-            Today {new Date().toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}
-          </span>
-        </div>
-
+      <div className="flex-1 overflow-y-auto px-4 py-4 space-y-1">
         {messages.map((msg, index) => {
           const isLastInGroup = 
             index === messages.length - 1 || 
             messages[index + 1].isUser !== msg.isUser;
+
+          const showDateHeader = index === 0 || !isSameDay(messages[index - 1].timestamp, msg.timestamp);
+          const dateGroup = getMessageDateGroup(msg.timestamp);
+          const timeString = format(msg.timestamp, "h:mm a");
             
           return (
-            <div key={msg.id} className={msg.isUser ? "ml-auto" : "mr-auto"}>
-              <MessageBubble 
-                content={msg.content}
-                isUser={msg.isUser}
-                timestamp={msg.timestamp}
-                showTail={isLastInGroup}
-              />
-              {/* Delivered status for last user message */}
-              {msg.isUser && index === messages.length - 1 && !isTyping && (
-                <div className="text-[11px] font-medium text-ios-gray-500 text-right pr-1 -mt-1 mb-2 opacity-60 transition-opacity">
-                  Delivered
+            <div key={msg.id} className="flex flex-col">
+              {/* Date Header */}
+              {showDateHeader && (
+                 <div className="text-center py-4 mb-2">
+                  <span className="text-[11px] font-medium text-gray-400">
+                    {dateGroup} {timeString}
+                  </span>
                 </div>
               )}
+
+              <div className={msg.isUser ? "ml-auto" : "mr-auto"}>
+                <MessageBubble 
+                  content={msg.content}
+                  isUser={msg.isUser}
+                  timestamp={msg.timestamp}
+                  showTail={isLastInGroup}
+                />
+                {/* Delivered/Read status for last user message */}
+                {msg.isUser && index === messages.length - 1 && !isTyping && (
+                  <div className="text-[11px] font-medium text-ios-gray-500 text-right pr-1 -mt-1 mb-4 opacity-60 transition-opacity">
+                    {msg.status === 'read' ? 'Read' : 'Delivered'}
+                  </div>
+                )}
+              </div>
             </div>
           );
         })}
         
         {isTyping && (
-          <div className="flex items-end gap-2 mb-2">
-             <div className="w-8 h-8 rounded-full overflow-hidden bg-gray-200 shrink-0 mb-1">
+          <div className="flex items-end gap-2 mb-2 mt-2 ml-1">
+             <div className="w-7 h-7 rounded-full overflow-hidden bg-gray-200 shrink-0 mb-1">
                 <img 
                   src={avatarImage} 
                   alt="AI" 
