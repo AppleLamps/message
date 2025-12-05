@@ -21,11 +21,11 @@ export function MessageBubble({ content, isUser, timestamp, showTail = true }: M
     >
       <div
         className={cn(
-          "relative px-3 py-[6px] max-w-[75%] text-[17px] leading-[22px] whitespace-pre-wrap",
+          "relative px-3 py-[6px] max-w-[78%] md:max-w-[68%] text-[17px] leading-[22px] whitespace-pre-wrap",
           "rounded-[18px]",
-          isUser 
-            ? "bg-ios-blue text-white" 
-            : "bg-ios-gray text-black",
+          isUser
+            ? "bg-ios-blue text-white shadow-[0_1px_0_rgba(0,122,255,0.28)]"
+            : "bg-ios-gray text-black shadow-[0_1px_0_rgba(0,0,0,0.08)]",
           showTail && isUser && "bubble-user",
           showTail && !isUser && "bubble-other"
         )}

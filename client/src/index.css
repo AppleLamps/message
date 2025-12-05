@@ -40,12 +40,12 @@
 
 :root {
   --ios-blue: 211 100% 50%;
-  --ios-gray: 240 5% 92%;
+  --ios-gray: 240 5% 93%;
   --ios-green: 135 59% 49%;
-  --ios-system-gray: 0 0% 100%;
-  --ios-system-gray-2: 240 10% 92%;
-  --ios-system-gray-6: 0 0% 100%;
-  --ios-separator: 240 6% 90%;
+  --ios-system-gray: 240 6% 97%;
+  --ios-system-gray-2: 240 10% 94%;
+  --ios-system-gray-6: 240 11% 97%;
+  --ios-separator: 240 7% 88%;
 
   --background: 0 0% 100%;
   --foreground: 0 0% 0%;
@@ -79,7 +79,8 @@
 }
 
 body {
-  @apply font-sans antialiased bg-white text-foreground;
+  @apply font-sans antialiased text-foreground;
+  background: hsl(var(--ios-system-gray-6));
   overscroll-behavior-y: none;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

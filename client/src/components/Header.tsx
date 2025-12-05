@@ -1,39 +1,40 @@
-import { ChevronLeft, Video } from "lucide-react";
+import { ChevronLeft, Video, Info } from "lucide-react";
 import avatarImage from "@assets/generated_images/a_professional_yet_friendly_ai_assistant_avatar.png";
 
 export function Header() {
   return (
-    <header className="flex items-center px-2 pt-12 pb-2 bg-white/95 backdrop-blur-sm border-b border-ios-separator sticky top-0 z-10">
-      <button className="flex items-center text-ios-blue hover:opacity-70 transition-opacity w-16">
-        <ChevronLeft className="w-8 h-8 -mr-1" strokeWidth={2} />
-        <span className="text-[17px] font-normal">20</span>
-      </button>
+    <header className="sticky top-0 z-10 border-b border-[hsl(var(--ios-separator))] bg-white/85 backdrop-blur-xl">
+      <div className="flex items-center px-3 pt-9 pb-2">
+        <button className="flex items-center text-[17px] text-ios-blue hover:opacity-70 transition-opacity">
+          <ChevronLeft className="w-7 h-7 -ml-1 mr-[2px]" strokeWidth={2.25} />
+          <span className="font-normal">Messages</span>
+        </button>
 
-      <div className="flex-1 flex flex-col items-center justify-center">
-        <div className="w-10 h-10 rounded-full overflow-hidden bg-gray-300 mb-0.5">
-          <img 
-            src={avatarImage} 
-            alt="AI Assistant" 
-            className="w-full h-full object-cover"
-          />
+        <div className="flex-1 flex flex-col items-center justify-center gap-[2px]">
+          <div className="w-10 h-10 rounded-full overflow-hidden bg-gray-200 shadow-inner">
+            <img
+              src={avatarImage}
+              alt="AI Assistant"
+              className="w-full h-full object-cover"
+            />
+          </div>
+          <span className="text-[17px] font-semibold text-black leading-tight">
+            AI Assistant
+          </span>
+          <span className="text-[12px] text-gray-500 leading-tight -mt-[2px]">
+            iMessage
+          </span>
         </div>
-        <div className="flex items-center gap-0.5">
-          <span className="text-[13px] font-normal text-black">AI Assistant</span>
-          <ChevronRight className="w-3 h-3 text-gray-400" />
+
+        <div className="flex items-center gap-2 text-ios-blue">
+          <button className="p-1.5 rounded-full hover:bg-gray-100 transition-colors">
+            <Video className="w-6 h-6" strokeWidth={1.6} />
+          </button>
+          <button className="p-1.5 rounded-full hover:bg-gray-100 transition-colors">
+            <Info className="w-6 h-6" strokeWidth={1.6} />
+          </button>
         </div>
       </div>
-
-      <button className="w-16 flex justify-end text-ios-blue hover:opacity-70 transition-opacity">
-        <Video className="w-7 h-7" strokeWidth={1.5} />
-      </button>
     </header>
-  );
-}
-
-function ChevronRight({ className }: { className?: string }) {
-  return (
-    <svg className={className} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-      <polyline points="9 18 15 12 9 6"></polyline>
-    </svg>
   );
 }
